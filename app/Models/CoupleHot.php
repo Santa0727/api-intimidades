@@ -12,4 +12,8 @@ class CoupleHot extends Model
 	protected $fillable = [
 		'type', 'gender', 'value', 'shot', 'lang'
 	];
+
+	protected $hidden = [
+		'created_at', 'updated_at',
+	];
 }

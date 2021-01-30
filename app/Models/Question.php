@@ -12,4 +12,8 @@ class Question extends Model
 	protected $fillable = [
 		'type', 'value', 'shot', 'lang'
 	];
+
+	protected $hidden = [
+		'created_at', 'updated_at',
+	];
 }

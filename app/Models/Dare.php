@@ -12,4 +12,8 @@ class Dare extends Model
 	protected $fillable = [
 		'type', 'gender', 'shot', 'lang'
 	];
+
+	protected $hidden = [
+		'created_at', 'updated_at',
+	];
 }

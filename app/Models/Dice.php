@@ -12,4 +12,8 @@ class Dice extends Model
 	protected $fillable = [
 		'place', 'action', 'level', 'lang'
 	];
+
+	protected $hidden = [
+		'created_at', 'updated_at',
+	];
 }

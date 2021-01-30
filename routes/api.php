@@ -48,11 +48,13 @@ Route::group(['middleware' => 'api', 'prefix' => 'admin'], function() {
 	Route::post('create-soft', [AdminController::class, 'createSoft']);
 	Route::post('update-soft', [AdminController::class, 'updateSoft']);
 	Route::post('delete-soft', [AdminController::class, 'deleteSoft']);
+	Route::post('get-soft-by-id', [AdminController::class, 'getSoftById']);
 
 	Route::post('get-hots', [AdminController::class, 'getHots']);
 	Route::post('create-hot', [AdminController::class, 'createHot']);
 	Route::post('update-hot', [AdminController::class, 'updateHot']);
 	Route::post('delete-hot', [AdminController::class, 'deleteHot']);
+	Route::post('get-hot-by-id', [AdminController::class, 'getHotById']);
 });
 
 Route::group(['middleware' => 'api', 'prefix' => 'rate'], function() {

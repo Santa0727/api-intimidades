@@ -98,6 +98,12 @@ class AdminController extends Controller
 		return response()->json($result);
 	}
 
+	public function getSoftById(Request $request)
+	{
+		$this->validate($request, ['id' => 'required|exists:couple_softs,id']);
+		return response()->json(CoupleSoft::where('id', $request->id)->first());
+	}
+
 	private function filterHots($lang)
 	{
 		return CoupleHot::where('lang', $lang)->get()->map(function ($hot) {
@@ -154,5 +160,11 @@ class AdminController extends Controller
 		]);
 		$result = CoupleHot::where('id', $request->id)->first()->delete();
 		return response()->json($result);
+	}
+
+	public function getHotById(Request $request)
+	{
+		$this->validate($request, ['id' => 'required|exists:couple_hots,id']);
+		return response()->json(CoupleHot::where('id', $request->id)->first());
 	}
 }
