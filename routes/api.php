@@ -41,27 +41,15 @@ Route::group(['middleware' => 'api', 'prefix' => 'game'], function() {
 Route::apiResource('my-dare', MyDareController::class);
 
 Route::group(['middleware' => 'api', 'prefix' => 'admin'], function() {
-	// Route::post('get-questions', [AdminController::class, 'getQuestions']);
-	// Route::post('create-question', [AdminController::class, 'createQuestion']);
-	// Route::post('update-question', [AdminController::class, 'updateQuestion']);
-	// Route::post('delete-question', [AdminController::class, 'deleteQuestion']);
-	
-	// Route::post('get-dares', [AdminController::class, 'getDares']);
-	// Route::post('create-dare', [AdminController::class, 'createDare']);
-	// Route::post('update-dare', [AdminController::class, 'updateDare']);
-	// Route::post('delete-dare', [AdminController::class, 'deleteDare']);
-
 	Route::post('get-dice', [AdminController::class, 'getDice']);
 	Route::post('replace-dice', [AdminController::class, 'replaceDice']);
 
 	Route::post('get-softs', [AdminController::class, 'getSofts']);
-	Route::post('get-all-softs', [AdminController::class, 'getAllSofts']);
 	Route::post('create-soft', [AdminController::class, 'createSoft']);
 	Route::post('update-soft', [AdminController::class, 'updateSoft']);
 	Route::post('delete-soft', [AdminController::class, 'deleteSoft']);
 
 	Route::post('get-hots', [AdminController::class, 'getHots']);
-	Route::post('get-all-hots', [AdminController::class, 'getAllHots']);
 	Route::post('create-hot', [AdminController::class, 'createHot']);
 	Route::post('update-hot', [AdminController::class, 'updateHot']);
 	Route::post('delete-hot', [AdminController::class, 'deleteHot']);

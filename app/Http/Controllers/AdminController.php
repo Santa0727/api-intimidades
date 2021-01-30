@@ -16,100 +16,6 @@ class AdminController extends Controller
 		$this->middleware('admin');
 	}
 
-	private function filterQuestions($type, $lang)
-	{
-		return Question::where('type', $type)->where('lang', $lang)->get()->map(function ($q) {
-			return [
-				'id' => $q->id,
-				'shot' => $q->shot,
-				'value' => $q->value
-			];
-		});
-	}
-
-	public function getQuestions(Request $request)
-	{
-		return response()->json([
-			'eng' => $this->filterQuestions($request->type, 'ENG'),
-			'rus' => $this->filterQuestions($request->type, 'RUS'),
-			'spa' => $this->filterQuestions($request->type, 'SPA')
-		]);
-	}
-
-	public function createQuestion(Request $request)
-	{
-		$this->validate($request, [
-			'lang' => 'required|in:ENG,RUS,SPA',
-			'type' => 'required|in:MUL,FF,MM,MF',
-			'value' => 'required',
-			'shot' => 'required|integer'
-		]);
-		return response()->json(Question::create($request->all()));
-	}
-
-	public function updateQuestion(Request $request)
-	{
-		$this->validate($request, [
-			'id' => 'required|exists:questions,id',
-			'value' => 'required',
-			'shot' => 'required|integer'
-		]);
-		return response()->json(Question::where('id', $request->id)->first()->update($request->only(['value', 'shot'])));
-	}
-
-	public function deleteQuestion(Request $request)
-	{
-		$this->validate($request, ['id' => 'required|exists:questions,id']);
-		return response()->json(Question::where('id', $request->id)->first()->delete());
-	}
-
-	private function filterDares($type, $lang)
-	{
-		return Dare::where('type', $type)->where('lang', $lang)->get()->map(function ($d) {
-			return [
-				'id' => $d->id,
-				'shot' => $d->shot,
-				'value' => $d->value
-			];
-		});
-	}
-
-	public function getDares(Request $request)
-	{
-		return response()->json([
-			'eng' => $this->filterDares($request->type, 'ENG'),
-			'rus' => $this->filterDares($request->type, 'RUS'),
-			'spa' => $this->filterDares($request->type, 'SPA'),
-		]);
-	}
-
-	public function createDare(Request $request)
-	{
-		$this->validate($request, [
-			'lang' => 'required|in:ENG,RUS,SPA',
-			'type' => 'required|in:MUL,FF,MM,MF',
-			'value' => 'required',
-			'shot' => 'required|integer'
-		]);
-		return response()->json(Dare::create($request->all()));
-	}
-
-	public function updateDare(Request $request)
-	{
-		$this->validate($request, [
-			'id' => 'required|exists:dares,id',
-			'value' => 'required',
-			'shot' => 'required|integer'
-		]);
-		return response()->json(Dare::where('id', $request->id)->first()->update($request->only(['value', 'shot'])));
-	}
-
-	public function deleteDare(Request $request)
-	{
-		$this->validate($request, ['id' => 'required|exists:dares,id']);
-		return response()->json(Dare::where('id', $request->id)->first()->delete());
-	}
-
 	public function getDice(Request $request)
 	{
 		$result = Dice::where('lang', $request->lang)->where('level', 0)->first();
@@ -134,13 +40,16 @@ class AdminController extends Controller
 		}
 	}
 
-	private function filterSofts($type, $gender, $lang)
+	private function filterSofts($lang)
 	{
-		return CoupleSoft::where([['type', $type], ['gender', $gender], ['lang', $lang]])->get()->map(function ($c) {
+		return CoupleSoft::where('lang', $lang)->get()->map(function($soft) {
 			return [
-				'id' => $c->id,
-				'shot' => $c->shot,
-				'value' => $c->value
+				'id' => $soft->id,
+				'type' => $soft->type,
+				'gender' => $soft->gender,
+				'value' => $soft->value,
+				'shot' => $soft->shot,
+				'lang' => $soft->lang
 			];
 		});
 	}
@@ -148,9 +57,9 @@ class AdminController extends Controller
 	public function getSofts(Request $request)
 	{
 		return response()->json([
-			'eng' => $this->filterSofts($request->type, $request->gender, 'ENG'),
-			'rus' => $this->filterSofts($request->type, $request->gender, 'RUS'),
-			'spa' => $this->filterSofts($request->type, $request->gender, 'SPA'),
+			'eng' => $this->filterSofts('ENG'),
+			'rus' => $this->filterSofts('RUS'),
+			'spa' => $this->filterSofts('SPA'),
 		]);
 	}
 
@@ -171,10 +80,12 @@ class AdminController extends Controller
 	{
 		$this->validate($request, [
 			'id' => 'required|exists:couple_softs,id',
+			'gender' => 'required|in:F,M',
+			'type' => 'required|in:D,Q',
 			'value' => 'required',
-			'shot' => 'required'
+			'shot' => 'required|integer'
 		]);
-		$result = CoupleSoft::where('id', $request->id)->first()->update($request->only(['value', 'shot']));
+		$result = CoupleSoft::where('id', $request->id)->first()->update($request->except(['id']));
 		return response()->json($result);
 	}
 
@@ -187,13 +98,16 @@ class AdminController extends Controller
 		return response()->json($result);
 	}
 
-	private function filterHots($type, $gender, $lang)
+	private function filterHots($lang)
 	{
-		return CoupleHot::where([['type', $type], ['gender', $gender], ['lang', $lang]])->get()->map(function ($h) {
+		return CoupleHot::where('lang', $lang)->get()->map(function ($hot) {
 			return [
-				'id' => $h->id,
-				'shot' => $h->shot,
-				'value' => $h->value
+				'id' => $hot->id,
+				'type' => $hot->type,
+				'gender' => $hot->gender,
+				'value' => $hot->value,
+				'shot' => $hot->shot,
+				'lang' => $hot->lang
 			];
 		});
 	}
@@ -201,9 +115,9 @@ class AdminController extends Controller
 	public function getHots(Request $request)
 	{
 		return response()->json([
-			'eng' => $this->filterHots($request->type, $request->gender, 'ENG'),
-			'rus' => $this->filterHots($request->type, $request->gender, 'RUS'),
-			'spa' => $this->filterHots($request->type, $request->gender, 'SPA'),
+			'eng' => $this->filterHots('ENG'),
+			'rus' => $this->filterHots('RUS'),
+			'spa' => $this->filterHots('SPA'),
 		]);
 	}
 
@@ -224,10 +138,12 @@ class AdminController extends Controller
 	{
 		$this->validate($request, [
 			'id' => 'required|exists:couple_hots,id',
+			'gender' => 'required|in:F,M',
+			'type' => 'required|in:Q,D',
 			'value' => 'required',
 			'shot' => 'required'
 		]);
-		$result = CoupleHot::where('id', $request->id)->first()->update($request->only(['value', 'shot']));
+		$result = CoupleHot::where('id', $request->id)->first()->update($request->except(['id']));
 		return response()->json($result);
 	}
 
